@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breed Images</title>
+    <link rel="icon" href="https://imgur.com/3h3nltE.jpg" type="image/png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(to bottom, #fdf6f0, #f8f9fa);
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        h1 {
+            color: #ff6f61;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px #555;
+        }
+
+        .card {
+            border: none;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        .card-img-top {
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            border-color: #6c757d;
+            color: #fff;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            border-color: #545b62;
+        }
+
+        footer {
+            text-align: center;
+            padding: 10px 0;
+            margin-top: auto; 
+            background-color: #f8f9fa;
+            color: #555;
+        }
+
+        @media (max-width: 576px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .card-img-top {
+                max-height: 150px;
+                object-fit: cover;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container mt-5">
+    <h1 id="breed-name" class="text-center">Breed Images</h1>
+    <div class="text-center my-3">
+        <a href="index.html" class="btn btn-secondary">🔙 Back to Breeds</a>
+    </div>
+    <div id="breed-images" class="row mt-4">
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2024 Dog Breeds Explorer 🐾 | Powered by Dog CEO API</p>
+</footer>
+
+<script>
+    function loadBreedImages() {
+        const params = new URLSearchParams(window.location.search);
+        const breed = params.get('breed');
+        
+        document.getElementById('breed-name').textContent = `Images of ${breed.charAt(0).toUpperCase() + breed.slice(1)}`;
+
+        fetch(`https://dog.ceo/api/breed/${breed}/images`)
+            .then(response => response.json())
+            .then(data => {
+                const images = data.message;
+                const imagesContainer = document.getElementById('breed-images');
+                imagesContainer.innerHTML = '';
+
+                images.forEach(image => {
+                    const imageCard = `
+                        <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
+                            <div class="card">
+                                <img src="${image}" class="card-img-top" alt="${breed}">
+                            </div>
+                        </div>
+                    `;
+                    imagesContainer.innerHTML += imageCard;
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching breed images:', error);
+            });
+    }
+
+    window.onload = loadBreedImages;
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
