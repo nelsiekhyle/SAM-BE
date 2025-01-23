@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Olympic Training Portal</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" href="assets/images/olympic-icon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Open Sans', sans-serif;
+            margin: 0;
+            padding: 20px 0;
+            background: #f7f9fc;
+            color: #333;
+            scroll-behavior: smooth;
+        }
+
+        header {
+            background: linear-gradient(90deg, #004080, #002060); 
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .headerContainer {
+            width: 90%;
+            margin: 0 auto;
+            max-width: 1200px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            max-width: 100px;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        nav ul li {
+            margin-left: 1.5rem;
+            position: relative;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: color 0.3s, transform 0.3s;
+        }
+
+        nav ul li a:hover {
+            color: #ffcc00;
+            transform: scale(1.05);
+        }
+
+        .slideshowContainer {
+            position: relative;
+            max-width: 100%;
+            margin: auto;
+            overflow: hidden;
+        }
+
+        .slides {
+            display: none;
+            width: 100%;
+            height: 100vh;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .active {
+            display: block;
+            opacity: 1;
+        }
+
+        .heroText {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            text-align: center;
+            z-index: 2;
+        }
+
+        .heroText h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .heroText p {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .btn {
+            background-color: #ff6f61;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            display: inline-block;
+        }
+
+        .btn:hover {
+            background-color: #ff3b2f;
+        }
+
+        section {
+            padding: 4rem 0;
+        }
+
+        section h2 {
+            font-family: 'Montserrat', sans-serif;
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #004080; 
+            font-size: 2.5rem;
+            text-transform: uppercase;
+        }
+
+        .training {
+            padding: 50px 20px;
+            color: white;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .trainingGrid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background-color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .card h4 {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+        }
+
+        .card img {
+            max-width: 100%;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+
+        footer {
+            background: #004080;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+        }
+
+        footer p {
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        form label {
+            font-weight: bold;
+        }
+
+        form input, form textarea {
+            padding: 0.8rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            transition: border-color 0.3s;
+        }
+
+        form input:focus, form textarea:focus {
+            border-color: #004080; 
+            outline: none;
+        }
+
+        form button {
+            background: #ffcc00; 
+            color: #004080; 
+            padding: 0.8rem;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        form button:hover {
+            background: #004080; 
+            color: #ffcc00; 
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding-top: 60px;
+            transition: opacity 0.3s ease;
+        }
+
+        .modalContent {
+            position: relative;
+            background-color: rgba(255, 255, 255, 0.9);
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 60%;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            animation: slideDown 0.5s ease;
+            overflow: hidden;
+        }
+
+        .modalContent::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('Pics/modal-bg.jpg') no-repeat center center/cover;
+            opacity: 0.3; /* Adjust the opacity as needed */
+            z-index: -1;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modalContent img {
+            max-width: 100%;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .modalContent h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #004080;
+        }
+
+        .modalContent p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+        }
+
+        .bballPic,
+        .boxingPic,
+        .volleyballPic,
+        .weightliftingPic,
+        .athleticsPic,
+        .swimmingPic,
+        .taekwondoPic,
+        .badmintonPic {
+            max-width: 100%;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .about {
+            position: relative;
+            padding: 50px 20px;
+            color: rgb(37, 35, 35);
+        }
+
+        .about::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('Pics/olympic.avif') no-repeat center center/cover;
+            opacity: 0.4; 
+            z-index: -1;
+        }
+
+        .about .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .about h2 {
+            font-family: 'Montserrat', sans-serif;
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #ffcc00; 
+            font-size: 2.5rem;
+            text-transform: uppercase;
+        }
+
+        .about p {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .coaches {
+            padding: 50px 20px;
+            color: white;
+        }
+
+        .coaches .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .coaches h2 {
+            font-family: 'Montserrat', sans-serif;
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #004080;
+            font-size: 2.5rem;
+            text-transform: uppercase;
+        }
+
+        .coachesGrid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+            z-index: 1; 
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .card h4, .card p {
+            position: relative;
+            z-index: 2;
+        }
+
+        .card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5); 
+            z-index: 1;
+        }
+
+        .cardCoaches {
+            background-color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+            z-index: 1; 
+        }
+
+        .cardCoaches:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .cardCoaches h4, .cardCoaches p {
+            position: relative;
+            z-index: 2;
+        }
+
+        .cardCoaches img {
+            max-width: 100%;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            z-index: 1000;
+        }
+
+        .cardCoaches {
+            background-size: cover;
+            background-position: center;
+            color: rgb(0, 0, 0);
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+            z-index: 1; 
+        }
+
+        .cardCoaches:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .cardCoaches h4, .cardCoaches p {
+            position: relative;
+            z-index: 2;
+        }
+
+        .cardCoaches::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body id="top">
+     <!-- Header Section -->
+       <header>
+        <div class="headerContainer">
+            <img src="Pics/logo.png" alt="Olympic Logo" class="logo">
+            <nav>
+                <ul>
+                    <li><a href="#top">Home</a></li>
+                    <li><a href="#training">Training</a></li>
+                    <li><a href="#coaches">Coaches</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+</body> 
+
+<!-- Slideshow Section -->
+ <div class="slideshowContainer">
+    <div class="slides active" style="background-image: url('Pics/training.jpg');">
+        <div class="heroText">
+            <h1>Welcome to the Olympic Training Portal</h1>
+            <p>Unlock your potential with world-class training and insights.</p>
+            <a href="#training" class="btn">Get Started</a>
+        </div>
+    </div>
+    <div class="slides" style="background-image: url('Pics/training2.jpg');">
+        <div class="heroText">
+            <h1>Train with the Best</h1>
+            <p>Join our programs and learn from top coaches.</p>
+            <a href="#training" class="btn">Get Started</a>
+        </div>
+    </div>
+    <div class="slides" style="background-image: url('Pics/training3.png');">
+        <div class="heroText">
+            <h1>Achieve Your Goals</h1>
+            <p>Get personalized training plans and support.</p>
+            <a href="#training" class="btn">Get Started</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    let slideIndex = 0;
+    showSlides();
+
+    function showSlides() {
+        let slides = document.getElementsByClassName("slides");
+        for (let i = 0; i < slides.length; i++) {
+            slides[i].classList.remove("active");
+        }
+        slideIndex++;
+        if (slideIndex > slides.length) { slideIndex = 1 }
+        slides[slideIndex - 1].classList.add("active");
+        setTimeout(showSlides, 5000);
+    }
+</script>
+
+<!-- Training Section -->
+ <section id="training" class="training">
+    <div class="container">
+        <h2>Explore Training Programs</h2>
+        <div class="trainingGrid">
+            <div class="card" style="background-image: url('Pics/bball.jpg');" onclick="openModal('basketballModal')">
+                <h4>Basketball</h4>
+                <p>Coach: John Doe</p>
+            </div>
+            <div class="card" style="background-image: url('Pics/boxing.jpg');" onclick="openModal('boxingModal')">
+                <h4>Boxing</h4>
+                <p>Coach: Manny Pacquiao</p>
+            </div>
+            <div class="card" style="background-image: url('Pics/vball.jpg');" onclick="openModal('volleyballModal')">
+                <h4>Volleyball</h4>
+                <p>Coach: Jane Smith</p>
+            </div>
+            <div class="card" style="background-image: url('Pics/weightlifting.jpg');" onclick="openModal('weightliftingModal')">
+                <h4>Weightlifting</h4>
+                <p>Coach: Hidilyn Diaz</p>
+            </div>
+            <div class="card" style="background-image: url('Pics/athletics.jpg');" onclick="openModal('athleticsModal')">
+                <h4>Athletics (Track and Field)</h4>
+                <p>Coach: Usain Bolt</p>
+            </div>
+            <div class="card" style="background-image: url('Pics/swimming.jpg');" onclick="openModal('swimmingModal')">
+                <h4>Swimming</h4>
+                <p>Coach: Michael Phelps</p>
+            </div>
+            <div class="card" style="background-image: url('Pics/taekwondo.jpg');" onclick="openModal('taekwondoModal')">
+                <h4>Taekwondo</h4>
+                <p>Coach: Steven Lopez</p>
+            </div>
+            <div class="card" style="background-image: url('Pics/badminton.jpg');" onclick="openModal('badmintonModal')">
+                <h4>Badminton</h4>
+                <p>Coach: Lin Dan</p>
+            </div>
+            <div class="card" style="background-image: url('Pics/gymnastics.jpg');" onclick="openModal('gymnasticsModal')">
+                <h4>Gymnastics</h4>
+                <p>Coach: Carlos Yulo</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Modals -->
+ <div id="basketballModal" class="modal">
+    <div class="modalContent">
+        <span class="close" onclick="closeModal('basketballModal')">&times;</span>
+        <h2>Basketball</h2>
+        <img src="Pics/bball1.avif" alt="Basketball" class="bballPic">
+        <p>Basketball is a team sport where two teams, typically of five players each, oppose each other on a rectangular court. The objective is to shoot a basketball through the defender's hoop.</p>
+        <p><strong>Benefits:</strong> Improves coordination, teamwork, and cardiovascular health.</p>
+        <p><strong>Requirements:</strong> Basic fitness level, team spirit.</p>
+    </div>
+</div>
+
+<div id="boxingModal" class="modal">
+    <div class="modalContent">
+        <span class="close" onclick="closeModal('boxingModal')">&times;</span>
+        <h2>Boxing</h2>
+        <img src="Pics/boxing1.webp" alt="Boxing" class="boxingPic">
+        <p>Boxing is a combat sport in which two people, usually wearing protective gloves, throw punches at each other for a predetermined amount of time in a boxing ring.</p>
+        <p><strong>Benefits:</strong> Enhances strength, endurance, and self-defense skills.</p>
+        <p><strong>Requirements:</strong> High fitness level, discipline.</p>
+    </div>
+</div>
+
+<div id="volleyballModal" class="modal">
+    <div class="modalContent">
+        <span class="close" onclick="closeModal('volleyballModal')">&times;</span>
+        <h2>Volleyball</h2>
+        <img src="Pics/vball1.jpg" alt="Volleyball" class="volleyballPic">
+        <p>Volleyball is a team sport in which two teams of six players are separated by a net. Each team tries to score points by grounding a ball on the other team's court under organized rules.</p>
+        <p><strong>Benefits:</strong> Boosts agility, coordination, and teamwork.</p>
+        <p><strong>Requirements:</strong> Basic fitness level, team spirit.</p>
+    </div>
+</div>
+
+<div id="weightliftingModal" class="modal">
+    <div class="modalContent">
+        <span class="close" onclick="closeModal('weightliftingModal')">&times;</span>
+        <h2>Weightlifting</h2>
+        <img src="Pics/weightlifting1.jpg" alt="Weightlifting" class="weightliftingPic">
+        <p>Weightlifting is a sport in which the athlete attempts a maximum-weight single lift of a barbell loaded with weight plates.</p>
+        <p><strong>Benefits:</strong> Increases strength, muscle mass, and bone density.</p>
+        <p><strong>Requirements:</strong> High fitness level, proper technique.</p>
+    </div>
+</div>
+
+<div id="athleticsModal" class="modal">
+    <div class="modalContent">
+        <span class="close" onclick="closeModal('athleticsModal')">&times;</span>
+        <h2>Athletics (Track and Field)</h2>
+        <img src="Pics/athletics1.webp" alt="Athletics" class="athleticsPic">
+        <p>Athletics is a collection of sporting events that involve competitive running, jumping, throwing, and walking.</p>
+        <p><strong>Benefits:</strong> Enhances speed, endurance, and overall fitness.</p>
+        <p><strong>Requirements:</strong> Basic to high fitness level, depending on the event.</p>
+    </div>
+</div>
+
+<div id="swimmingModal" class="modal">
+    <div class="modalContent">
+        <span class="close" onclick="closeModal('swimmingModal')">&times;</span>
+        <h2>Swimming</h2>
+        <img src="Pics/swimming1.jpeg" alt="Swimming" class="swimmingPic">
+        <p>Swimming is an individual or team racing sport that requires the use of one's entire body to move through water.</p>
+        <p><strong>Benefits:</strong> Improves cardiovascular health, muscle strength, and flexibility.</p>
+        <p><strong>Requirements:</strong> Basic swimming skills, endurance.</p>
+    </div>
+</div>
+
+<div id="taekwondoModal" class="modal">
+    <div class="modalContent">
+        <span class="close" onclick="closeModal('taekwondoModal')">&times;</span>
+        <h2>Taekwondo</h2>
+        <img src="Pics/taekwondo1.jpg" alt="Taekwondo" class="taekwondoPic">
+        <p>Taekwondo is a Korean martial art characterized by its emphasis on head-height kicks, jumping and spinning kicks, and fast kicking techniques.</p>
+        <p><strong>Benefits:</strong> Enhances flexibility, strength, and self-defense skills.</p>
+        <p><strong>Requirements:</strong> Basic fitness level, discipline.</p>
+    </div>
+</div>
+
+<div id="badmintonModal" class="modal">
+    <div class="modalContent">
+        <span class="close" onclick="closeModal('badmintonModal')">&times;</span>
+        <h2>Badminton</h2>
+        <img src="Pics/badminton1.jpg" alt="Badminton" class="badmintonPic">
+        <p>Coach: Lin Dan</p>
+        <p>Badminton is a racquet sport played using racquets to hit a shuttlecock across a net. It can be played as a singles or doubles game.</p>
+        <p><strong>Benefits:</strong> Improves agility, coordination, and cardiovascular health.</p>
+        <p><strong>Requirements:</strong> Basic fitness level, quick reflexes.</p>
+    </div>
+</div>
+
+<div id="gymnasticsModal" class="modal">
+    <div class="modalContent">
+        <span class="close" onclick="closeModal('gymnasticsModal')">&times;</span>
+        <h2>Gymnastics</h2>
+        <img src="Pics/gymnastics1.avif" alt="Gymnastics" class="gymnasticsPic">
+        <p>Gymnastics is a sport that includes physical exercises requiring balance, strength, flexibility, agility, coordination, and endurance. The movements involved in gymnastics contribute to the development of the arms, legs, shoulders, back, chest, and abdominal muscle groups.</p>
+        <p><strong>Benefits:</strong> Enhances flexibility, strength, and coordination.</p>
+        <p><strong>Requirements:</strong> Basic fitness level, discipline, and dedication.</p>
+    </div>
+</div>
+
+<!-- Coaches Section -->
+ <section id="coaches" class="coaches">
+    <div class="container">
+        <h2>Meet Our Coaches</h2>
+        <div class="coachesGrid">
+            <div class="cardCoaches">
+                <img src="Pics/coach1.jpg" alt="Coach John Doe">
+                <h3>Coach John Doe</h3>
+                <p>Basketball coach with extensive experience in international competitions.</p>
+            </div>
+            <div class="cardCoaches">
+                <img src="Pics/coach2.jpg" alt="Coach Manny Pacquiao">
+                <h3>Coach Manny Pacquiao</h3>
+                <p>Boxing legend and coach, specializing in training champions.</p>
+            </div>
+            <div class="cardCoaches">
+                <img src="Pics/coach3.jpg" alt="Coach Jane Smith">
+                <h3>Coach Jane Smith</h3>
+                <p>Volleyball coach with a focus on team dynamics and strategy.</p>
+            </div>
+            <div class="cardCoaches">
+                <img src="Pics/coach4.jpg" alt="Coach Hidilyn Diaz">
+                <h3>Coach Hidilyn Diaz</h3>
+                <p>Weightlifting coach and Olympic gold medalist.</p>
+            </div>
+            <div class="cardCoaches">
+                <img src="Pics/coach5.jpg" alt="Coach Usain Bolt">
+                <h3>Coach Usain Bolt</h3>
+                <p>Athletics (Track and Field) coach, world record holder and sprinting expert.</p>
+            </div>
+            <div class="cardCoaches">
+                <img src="Pics/coach6.jpg" alt="Coach Michael Phelps">
+                <h3>Coach Michael Phelps</h3>
+                <p>Swimming coach with a record number of Olympic gold medals.</p>
+            </div>
+            <div class="cardCoaches">
+                <img src="Pics/coach7.jpg" alt="Coach Steven Lopez">
+                <h3>Coach Steven Lopez</h3>
+                <p>Taekwondo coach and multiple-time world champion.</p>
+            </div>
+            <div class="cardCoaches">
+                <img src="Pics/coach8.jpg" alt="Coach Lin Dan">
+                <h3>Coach Lin Dan</h3>
+                <p>Badminton coach, known for his strategic gameplay and agility.</p>
+            </div>
+            <div class="cardCoaches">
+                <img src="Pics/coach9.jpg" alt="Coach Carlos Yulo">
+                <h3>Coach Carlos Yulo</h3>
+                <p>Gymnastics coach and world champion gymnast.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- About Section -->
+ <section id="about" class="about">
+    <div class="container">
+        <h2>About Us</h2>
+        <p>Welcome to the Olympic Training Portal, your ultimate destination for world-class training in the sports most popular in the Philippines. Our mission is to provide athletes of all levels with the resources and guidance they need to achieve their full potential in these sports. Whether you're a beginner looking to get started or an experienced athlete aiming to compete at the highest level, we have something for you.</p>
+        <p>Our portal specializes in training programs for sports that resonate with the Filipino community, each led by experienced coaches who are experts in their respective fields. We believe in a holistic approach to training, focusing not only on physical conditioning but also on mental toughness, strategy, and overall well-being.</p>
+        <p>At the Olympic Training Portal, we are committed to fostering a supportive and inclusive community. We understand that every athlete is unique, and we tailor our programs to meet individual needs and goals. Our state-of-the-art facilities and cutting-edge training techniques ensure that you receive the best possible preparation for your sporting endeavors.</p>
+        <p>Join us at the Olympic Training Portal and take the first step towards achieving your athletic dreams. Together, we can unlock your potential and help you reach new heights in your sporting journey. Thank you for choosing us as your training partner, and we look forward to supporting you every step of the way.</p>
+    </div>
+</section>
+
+<!-- Contact Section -->
+ <section id="contact" class="contact">
+    <div class="container">
+        <h2>Contact Us</h2>
+        <form>
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+            <label for="message">Message:</label>
+            <textarea id="message" name="message" rows="5" required></textarea>
+            <button type="submit">Send</button>
+        </form>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <p>&copy; 2025 Olympic Training Portal. All rights reserved.</p>
+    </div>
+</footer>
+
+<script>
+    function openModal(modalId) {
+        document.getElementById(modalId).style.display = "block";
+        document.getElementById(modalId).style.opacity = "1";
+    }
+
+    function closeModal(modalId) {
+        document.getElementById(modalId).style.opacity = "0";
+        setTimeout(() => {
+            document.getElementById(modalId).style.display = "none";
+        }, 300);
+    }
+
+    window.onclick = function(event) {
+        var modals = document.getElementsByClassName('modal');
+        for (var i = 0; i < modals.length; i++) {
+            if (event.target == modals[i]) {
+                modals[i].style.opacity = "0";
+                setTimeout(() => {
+                    modals[i].style.display = "none";
+                }, 300);
+            }
+        }
+    }
+</script>
+</body>
+</html>
